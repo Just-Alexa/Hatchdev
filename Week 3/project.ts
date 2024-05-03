@@ -16,34 +16,15 @@
 // class Order{}
 
 import { DeliveryType, IProduct, OrderState } from "./types";
+import { generateId, isProduct, sendResponse } from "./utils";
 
-function generateId(length: number = 10) {
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += Math.random().toString(35).slice(2, 3);
-  }
-  return result;
-}
-
-export const createAdminUser = (
-  firstName: string,
-  lastName: string,
-  username: string,
-  email: string,
-  password: string
-): User => {
-  const user = new User(firstName, lastName, username, email, password);
-  user.setToAdmin();
-
-  return user;
-};
 
 export class User {
   id: string;
   private firsName: string;
   private lastName: string;
   username: string;
-  email: string;
+  private email: string;
   private password: string;
   isAdmin: boolean = false;
 
@@ -71,9 +52,7 @@ export class User {
   }
 }
 
-const isProduct = (product: unknown): product is Product => {
-  return product instanceof Product;
-};
+
 
 export class Store {
   private allProducts: Product[] = [];
@@ -86,30 +65,29 @@ export class Store {
   }
 
   addToCart(productId: string) {
+    //This is used for checking if the product is in cart
     const foundProduct = this.allProducts.find(
       (product) => product.id === productId
     );
-    if (!foundProduct)
-      return console.log({
-        ok: false,
-        message: "Product Not found",
-        statusCode: 404,
-      });
+
+    //If the product isn't found return error
+    if (!foundProduct) return sendResponse(false, "product not found", 404);
+
     if (isProduct(foundProduct)) {
+      //If the product isn't in stock return an error
       if (foundProduct.amountInStock <= 0)
-        return console.log({
-          ok: false,
-          message: "Product don finish baba, wetin you wan add!",
-          statusCode: 400,
-        });
+        return sendResponse(
+          false,
+          "Baba product don finish, wetin you want",
+          400
+        );
+      //If the product is in stock, add it to the cart
       this.cart.addProduct(foundProduct);
-      console.log({
-        ok: true,
-        message: "Successfully added Product",
-        statusCode: 200,
-      });
+      return sendResponse(true, "Product added to cart", 200);
     }
   }
+
+  removeFromCart(productId: string) {}
 
   createProduct(
     name: string,
@@ -133,12 +111,50 @@ export class Store {
       newProduct = new Product(name, price, description, amountInStock);
     }
     this.allProducts.push(newProduct);
+    sendResponse(true, "Product created", 201);
+    return newProduct;
+  }
+
+  increaseAmount(productId: string, amount?: number) {
+    const foundItem = this.cart.items.find(
+      (item) => item.product.id === productId
+    );
+    if (!foundItem)
+      return sendResponse(false, "The product no dey here abeg", 404);
+    if (foundItem.product.amountInStock <= 0)
+      return sendResponse(false, "Product don finish baba, no vex");
+    foundItem.increaseCount();
+    return sendResponse(true, "Product added to cart", 200);
+  }
+
+  decreaseAmount(productId: string, amount: number) {
+    const foundItem = this.cart.items.find(
+      (item) => item.product.id === productId
+    );
+    if (!foundItem)
+      return sendResponse(false, "The product no dey here abeg", 404);
+    if (foundItem.count === 1) {
+      this.removeFromCart(foundItem.product.id);
+      return sendResponse(true, "Product removed from cart", 200);
+    } 
+    foundItem.decreaseCount();
+    return sendResponse(true, "We don comot am", 200)
   }
 }
 
 class CartItem {
   product: Product;
   count: number = 1;
+
+  increaseCount() {
+    this.count += 1;
+    this.product.reduceAmountInStock();
+  }
+
+  decreaseCount() {
+    this.count -= 1;
+    this.product.increaseAmountInStock();
+  }
 
   constructor(product: Product, count?: number) {
     this.product = product;
@@ -161,7 +177,7 @@ export class Cart {
   }
 }
 
-class Product implements IProduct {
+export class Product implements IProduct {
   id: string;
   name: string;
   description: string;
@@ -179,6 +195,10 @@ class Product implements IProduct {
     this.price = price;
     this.amountInStock = amountInStock;
     this.id = generateId(10);
+  }
+
+  increaseAmountInStock() {
+    this.amountInStock = this.amountInStock + 1;
   }
 
   reduceAmountInStock() {

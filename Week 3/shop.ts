@@ -1,11 +1,30 @@
-import { Store, User, createAdminUser } from "./project";
+import { Category, Store, User } from "./project";
+import { createAdminUser } from "./utils";
 
-const kingsley = createAdminUser(
-  "Kingsley",
-  "Ihemelandu",
-  "kijuchihe",
-  "kijuchihe@gmail.com",
-  "YourPapa2024"
+const Alexa = createAdminUser(
+  "Alexa",
+  "Amazon",
+  "regularAlexa",
+  "regularAlexa@gmail.com",
+  "YouBeFool2028"
 );
 
-const store = new Store(kingsley);
+const store = new Store(Alexa);
+
+const cookingCategory = new Category("Cooking");
+
+const hotSauce = store.createProduct(
+  "Hotsause",
+  25000,
+  "Omo e go burn ooo",
+  120,
+  true,
+  cookingCategory
+);
+ 
+const {id:productId}= hotSauce
+
+
+store.addToCart(productId);
+
+store.increaseAmount(productId);

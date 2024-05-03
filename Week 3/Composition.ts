@@ -92,6 +92,7 @@ class Laptop {
   powerState: boolean = false;
   bitKind: BitKind;
   version: string;
+  
 
   constructor(
     os: OperatingSystem,
