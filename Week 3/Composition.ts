@@ -28,7 +28,7 @@
 //             type: "ssd",
 //             size: 512
 //         }
-        
+
 //     }
 
 //     switchOn(){
@@ -47,7 +47,6 @@
 // type OsKind = "Linux" | "Mac" | "Windows"
 // type BitKind = "x64" | "x32" | "X84"
 
-
 // class OperatingSystem {
 //     kind: OsKind;
 //     version: number;
@@ -58,7 +57,6 @@
 //     type: "ssd" | "hdd"
 //     size: number
 // }
-
 
 // class Display {
 //     size: number
@@ -73,11 +71,9 @@
 //     }
 // }
 
-
 // class NetworkInterfaceCard {
 //     name: string
 // }
-
 
 // class Keyboard {
 //     kind: KeyBoardKind
@@ -96,10 +92,9 @@ class Laptop {
   powerState: boolean = false;
   bitKind: BitKind;
   version: string;
-  
 
   constructor(
-    os:OperatingSystem,
+    os: OperatingSystem,
     bit: BitKind,
     display: Display,
     nic: NetworkInterfaceCard,
@@ -114,7 +109,7 @@ class Laptop {
   }
 
   update(version: number) {
-    this.version = version;
+    this.version = String(version);
   }
 
   shutDown() {
@@ -150,13 +145,12 @@ class Display {
   type: DisplayType;
 
   constructor(size: number, type: DisplayType) {
-    this.size = 13.3
+    this.size = 13.3;
     this.type = "amoled";
   }
 
   set displaySize(val: number) {
     this.size = val;
-
   }
 
   setDisplayType(type: DisplayType) {
@@ -168,7 +162,6 @@ type DisplayType = "amoled" | "lcd" | "oled";
 
 class NetworkInterfaceCard {
   constructor(public readonly name: string) {}
-
 }
 
 type KeyBoardKind = "in-built" | "external";
@@ -179,7 +172,7 @@ class KeyBoard {
 
   layout: KeyBoardLayout;
 
-  constructor(kind: KeyBoardKind , layout) {
+  constructor(kind: KeyBoardKind, layout) {
     this.kind = kind;
     this.layout = "Qwertz";
   }
