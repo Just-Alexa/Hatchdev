@@ -1,4 +1,4 @@
-import { Product, User } from "./project";
+import { Product, User } from "./Shopping-Cart";
 
 export function generateId(length: number = 10) {
   let result = "";

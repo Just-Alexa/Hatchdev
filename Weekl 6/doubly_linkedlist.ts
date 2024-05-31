@@ -11,7 +11,7 @@ class DLNode<T> {
 class DoublyLinkedList<T> {
   head: DLNode<T>;
 
-  add(val: T, position?:number){
+  add(val: T, position?:number{
     const newNode = new DLNode(val);
 
     // if we don't have 'head'

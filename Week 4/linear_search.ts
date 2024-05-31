@@ -1,5 +1,5 @@
 const scores = [88,75,40,60,90]
-const target = 90
+const target = 900
 
 function linearSearch(input: number[], target: number): number {
     for (let i = 0; i <= input.length; i++) {

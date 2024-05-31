@@ -1,4 +1,4 @@
-import { Category, Store, User } from "./project";
+import { Category, Store, User } from "./Shopping-Cart";
 import { createAdminUser } from "./utils";
 
 const Alexa = createAdminUser(
